@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">PopularMoviesStg1</string>
+    <string name="Top_Rated">Top Rated</string>
+    <string name="Popular_Movies">Popular Movies</string>
+    <string name="Original_title"></string>
+    <string name="overview">Overview: \t</string>
+    <string name="ratings">Ratings: \t </string>
+    <string name="release_date">Release Date: \t</string>
+
+
 </resources>

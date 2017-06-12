@@ -10,9 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-/**
- * Created by Dell on 10-06-2017.
- */
 
 public class NetworkUtils {
 
@@ -38,13 +35,12 @@ public class NetworkUtils {
             }
         } catch (IOException e) {
 
-            Log.e(TAG,"problem retrieving theearthquake json results", e);
+            Log.e(TAG,"problem retrieving the earthquake json results", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
             if (inputStream != null) {
-                // function must handle java.io.IOException here
                 inputStream.close();
             }
         }
