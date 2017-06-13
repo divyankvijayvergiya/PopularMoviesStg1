@@ -1,4 +1,4 @@
-package android.example.com.popularmoviesstg1;
+package application.example.com.popularmoviesstg1;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,13 +30,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private   GridView mgridview;
-    private ImageAdapter madapter;
-    private List<GridMovieItem> movielist;
+    private GridView mGridView;
+    private ImageAdapter mAdapter;
+    private List<GridMovieItem> movieList;
 
 
- private final   String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=2fa75eed778ddc192eed0f69098f7f6e",
-            TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=2fa75eed778ddc192eed0f69098f7f6e";
+    private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
+            TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
+    private static final String API_KEY = BuildConfig.API_KEY;
 
 
     @Override
@@ -44,77 +45,66 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
-
-
-
-
-
-            setContentView(R.layout.activity_main);
-
-
+        setContentView(R.layout.activity_main);
 
 
         ConnectivityManager cm =
-                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if(activeNetwork != null &&
+        if (activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting()) {
 
-            movietask task = new movietask();
-                task.execute(POPULAR_URL);
+            MovieTask task = new MovieTask();
+            task.execute(POPULAR_URL.concat(API_KEY));
 
 
-
-        }else
-        {
+        } else {
             Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
 
         }
 
 
     }
-    private void popular(){
-        ConnectivityManager cm =
-                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if(activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting()){
 
-        movietask task=new movietask();
-        task.execute(POPULAR_URL);
-    }
-        else
-        {
+    private void popular() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting()) {
+
+            MovieTask task = new MovieTask();
+            task.execute(POPULAR_URL.concat(API_KEY));
+        } else {
             Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
 
-        }}
+        }
+    }
+
     private void top_rated() {
         ConnectivityManager cm =
-                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if(activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting()){
-        movietask task = new movietask();
-        task.execute(TOP_RATED_URL);}
-        else
-        {
+        if (activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting()) {
+            MovieTask task = new MovieTask();
+            task.execute(TOP_RATED_URL.concat(API_KEY));
+        } else {
             Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
 
         }
     }
-
 
 
     private void data() {
 
-        mgridview = (GridView) findViewById(R.id.gvMain);
-        movielist = new ArrayList<>();
-        madapter = new ImageAdapter(MainActivity.this, movielist);
-        mgridview.setAdapter(madapter);
+        mGridView = (GridView) findViewById(R.id.gvMain);
+        movieList = new ArrayList<>();
+        mAdapter = new ImageAdapter(MainActivity.this, movieList);
+        mGridView.setAdapter(mAdapter);
 
-        mgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //// Creating an instance of GridMovieItem class with movie data
@@ -134,10 +124,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private class movietask extends AsyncTask<String,Void,ArrayList<GridMovieItem>> {
-        String add_info_url;
-        ProgressDialog dialog=new ProgressDialog(MainActivity.this);
+    private final class MovieTask extends AsyncTask<String, Void, ArrayList<GridMovieItem>> {
+        String addInfoUrl;
+        ProgressDialog dialog = new ProgressDialog(MainActivity.this);
 
         @Override
         protected void onPreExecute() {
@@ -153,10 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            add_info_url = params[0];
+            addInfoUrl = params[0];
 
             try {
-                URL url = new URL(add_info_url);
+                URL url = new URL(addInfoUrl);
                 String Response = NetworkUtils.makeHttpRequest(url);
                 ArrayList<GridMovieItem> json = ExtractFeatureFromJson(Response);
                 return json;
@@ -174,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
         }
 
         @Override
@@ -183,55 +171,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(final ArrayList<GridMovieItem> gridMovieItem) {
+        protected void onPostExecute(ArrayList<GridMovieItem> gridMovieItems) {
             dialog.dismiss();
 
             data();
 
-
             //adding all items of GridMovieItem Activity
-            madapter.addAll(gridMovieItem);
+            mAdapter.addAll(gridMovieItems);
 
 
-
-
-
-
-            super.onPostExecute(gridMovieItem);
+            super.onPostExecute(gridMovieItems);
         }
 
-                //Fetching data from Movie Url by JSON parsing.
+        //Fetching data from Movie Url by JSON parsing.
         public ArrayList<GridMovieItem> ExtractFeatureFromJson(String movie_data_string) {
 
-                    ArrayList<GridMovieItem>movielist=new ArrayList<>();
+            ArrayList<GridMovieItem> movielist = new ArrayList<>();
 
             try {
                 JSONObject root = new JSONObject(movie_data_string);
                 JSONArray result_array = root.getJSONArray("results");
 
 
-
-
-
-
                 for (int i = 0; i < result_array.length(); i++) {
                     JSONObject jsonObject = result_array.getJSONObject(i);
-                  String  poster_path=jsonObject.getString("poster_path");
+                    String poster_path = jsonObject.getString("poster_path");
 
 
-                   String original_title = jsonObject.getString("original_title");
+                    String original_title = jsonObject.getString("original_title");
 
 
-                   String overview = jsonObject.getString("overview");
-                 String   vote_average = jsonObject.getString("vote_average");
+                    String overview = jsonObject.getString("overview");
+                    String vote_average = jsonObject.getString("vote_average");
 
-                  String  release_date = jsonObject.getString("release_date");
+                    String release_date = jsonObject.getString("release_date");
 
-                    GridMovieItem moiveItem =  new GridMovieItem(poster_path, original_title, overview, vote_average, release_date);
+                    GridMovieItem moiveItem = new GridMovieItem(poster_path, original_title, overview, vote_average, release_date);
                     movielist.add(moiveItem);
                 }
                 return movielist;
-
 
 
             } catch (JSONException e) {
@@ -242,8 +220,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
     @Override
-    public boolean onCreateOptionsMenu (Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
@@ -251,22 +230,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
-        if(id==R.id.action_Popular_Movies){
-                 popular();
-                return true;
+        if (id == R.id.action_Popular_Movies) {
+            popular();
+            return true;
         }
-        if(id==R.id.action_Top_Rated){
-         top_rated();
-                return true;
+        if (id == R.id.action_Top_Rated) {
+            top_rated();
+            return true;
         }
         return super.onOptionsItemSelected(item);
-                    }
+    }
 
-            }
+}
 
 
 

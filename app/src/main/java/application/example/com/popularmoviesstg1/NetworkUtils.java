@@ -1,4 +1,4 @@
-package android.example.com.popularmoviesstg1;
+package application.example.com.popularmoviesstg1;
 
 import android.util.Log;
 
@@ -14,9 +14,10 @@ import java.nio.charset.Charset;
 public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
+
     public static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
-        if(url==null){
+        if (url == null) {
             return jsonResponse;
         }
         HttpURLConnection urlConnection = null;
@@ -27,15 +28,15 @@ public class NetworkUtils {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
             urlConnection.connect();
-            if(urlConnection.getResponseCode()==200){
+            if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);}
-            else{
-                Log.e(TAG,"Error response code:"+urlConnection.getResponseCode());
+                jsonResponse = readFromStream(inputStream);
+            } else {
+                Log.e(TAG, "Error response code:" + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
 
-            Log.e(TAG,"problem retrieving the earthquake json results", e);
+            Log.e(TAG, "problem retrieving the earthquake json results", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -46,6 +47,7 @@ public class NetworkUtils {
         }
         return jsonResponse;
     }
+
     public static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {

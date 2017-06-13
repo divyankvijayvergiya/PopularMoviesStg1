@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "android.example.com.popularmoviesstg1"
+        applicationId "application.example.com.popularmoviesstg1"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildTypes.each {
+        it.buildConfigField 'String', 'API_KEY', '"2fa75eed778ddc192eed0f69098f7f6e"'
     }
 }
 repositories {
@@ -32,6 +35,8 @@ dependencies {
     compile 'com.android.support:design:25.3.0'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     testCompile 'junit:junit:4.12'
 }

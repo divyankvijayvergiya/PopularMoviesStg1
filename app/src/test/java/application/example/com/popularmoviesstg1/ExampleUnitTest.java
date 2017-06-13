@@ -1,4 +1,4 @@
-package android.example.com.popularmoviesstg1;
+package application.example.com.popularmoviesstg1;
 
 import org.junit.Test;
 
