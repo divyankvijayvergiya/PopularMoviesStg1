@@ -22,6 +22,9 @@ public class MovieInfo extends AppCompatActivity {
     TextView voteRating;
     @BindView(R.id.tv_release_date)
     TextView releaseDate;
+
+    @BindView(R.id.tv_trailer)
+    TextView trailer;
     @BindView(R.id.iv_poster)
     ImageView posterPath;
 

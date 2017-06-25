@@ -11,13 +11,20 @@ public class GridMovieItem implements Parcelable {
     private String voteAverage;
     private String releaseDate;
 
+    public String getId() {
+        return id;
+    }
 
-    public GridMovieItem(String posterPath, String originalTitle, String overview, String voteAverage, String releaseDate) {
+    private String id;
+
+
+    public GridMovieItem(String posterPath,String id, String originalTitle, String overview, String voteAverage, String releaseDate) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overview = overview;
         this.voteAverage = voteAverage;
         this.releaseDate = releaseDate;
+        this.id=id;
 
     }
 
@@ -45,6 +52,7 @@ public class GridMovieItem implements Parcelable {
 
     protected GridMovieItem(Parcel in) {
         posterPath = in.readString();
+        id=in.readString();
         originalTitle = in.readString();
         overview = in.readString();
         voteAverage = in.readString();
@@ -59,6 +67,7 @@ public class GridMovieItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(posterPath);
+        dest.writeString(id);
         dest.writeString(originalTitle);
         dest.writeString(overview);
         dest.writeString(voteAverage);

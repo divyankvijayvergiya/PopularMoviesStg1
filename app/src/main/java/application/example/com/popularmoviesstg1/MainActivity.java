@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < result_array.length(); i++) {
                     JSONObject jsonObject = result_array.getJSONObject(i);
                     String poster_path = jsonObject.getString("poster_path");
+                    String id=jsonObject.getString("id");
 
 
                     String original_title = jsonObject.getString("original_title");
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                     String release_date = jsonObject.getString("release_date");
 
-                    GridMovieItem moiveItem = new GridMovieItem(poster_path, original_title, overview, vote_average, release_date);
+                    GridMovieItem moiveItem = new GridMovieItem(poster_path,id, original_title, overview, vote_average, release_date);
                     movielist.add(moiveItem);
                 }
                 return movielist;

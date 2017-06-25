@@ -37,7 +37,7 @@ public class ImageAdapter extends ArrayAdapter<GridMovieItem> {
         GridMovieItem movieItem = getItem(position);
 
 
-        Picasso.with(getContext()).load(BASE_URL.concat(movieItem.getPosterPath())).placeholder(R.drawable.user_placeholder).error(R.drawable.user_placeholder_error).fit().into(imageView_item);
+        Picasso.with(getContext()).load(BASE_URL.concat(movieItem.getPosterPath())).placeholder(R.drawable.placeholder).error(R.drawable.user_placeholder_error).fit().into(imageView_item);
 
 
         return convertView;
