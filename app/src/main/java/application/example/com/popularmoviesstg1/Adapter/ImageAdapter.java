@@ -1,4 +1,4 @@
-package application.example.com.popularmoviesstg1;
+package application.example.com.popularmoviesstg1.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import application.example.com.popularmoviesstg1.Model.GridMovieItem;
+import application.example.com.popularmoviesstg1.R;
 
 
 public class ImageAdapter extends ArrayAdapter<GridMovieItem> {

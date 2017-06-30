@@ -10,6 +10,8 @@
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:launchMode="singleTop"
+
         android:theme="@style/AppTheme">
         <activity android:name="application.example.com.popularmoviesstg1.MainActivity">
             <intent-filter>
@@ -25,6 +27,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="application.example.com.popularmoviesstg1.MainActivity" />
         </activity>
+        <activity android:name=".Content"></activity>
+        <provider
+            android:authorities="application.example.com.popularmoviesstg1"
+            android:name="application.example.com.popularmoviesstg1.Data.MovieContentProvider"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+  <ImageView
+      android:layout_width="100dp"
+      android:layout_height="80dp"
+      android:id="@+id/iv"/>
+
+    <TextView
+        android:id="@+id/trailer_name_view"
+        android:layout_width="60dp"
+        android:text="Trailor"
+        android:textSize="20dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical"
+        android:fontFamily="sans-serif-condensed"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:layout_weight="1"
+        android:textStyle="italic|bold"
+        android:textColor="@color/Blue"/>
+
+</LinearLayout>

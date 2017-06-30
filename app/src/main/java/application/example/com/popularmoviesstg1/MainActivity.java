@@ -27,6 +27,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.example.com.popularmoviesstg1.Adapter.ImageAdapter;
+import application.example.com.popularmoviesstg1.Model.GridMovieItem;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
             TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
-    private static final String API_KEY = BuildConfig.API_KEY;
+ public static final String API_KEY = BuildConfig.API_KEY;
 
 
     @Override
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < result_array.length(); i++) {
                     JSONObject jsonObject = result_array.getJSONObject(i);
                     String poster_path = jsonObject.getString("poster_path");
-                    String id=jsonObject.getString("id");
+                    Long id=jsonObject.getLong("id");
 
 
                     String original_title = jsonObject.getString("original_title");
