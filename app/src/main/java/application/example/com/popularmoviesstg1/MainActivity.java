@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                                     null,
                                     null,
                                     null,
-                                    MovieContract.FavoriteEntry._ID
+                                    null
                             );
                         }catch (Exception e){
                             e.printStackTrace();
