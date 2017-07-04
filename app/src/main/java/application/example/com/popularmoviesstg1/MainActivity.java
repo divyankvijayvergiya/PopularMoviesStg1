@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         private void favoriteLoader(){
-            getSupportLoaderManager().initLoader(Fav_LOADER_ID,null,null);
+            getSupportLoaderManager().initLoader(Fav_LOADER_ID,null,favoritesLoader).forceLoad();
         }
 
 

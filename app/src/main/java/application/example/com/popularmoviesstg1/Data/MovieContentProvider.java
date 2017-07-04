@@ -57,7 +57,7 @@ public class MovieContentProvider extends ContentProvider {
                 break;
             }
             case FAVORITES_ID: {
-                selection = FAVORITES_ID + "=?";
+                selection = FAVORITES_ID + "?=";
                 selectionArgs = new String[]{
                         String.valueOf(ContentUris.parseId(uri))
                 };
@@ -171,7 +171,7 @@ public class MovieContentProvider extends ContentProvider {
                 break;
             }
             case FAVORITES_ID: {
-                selection = MovieContract.FavoriteEntry._ID + "=?";
+                selection = MovieContract.FavoriteEntry._ID + "?=";
                 selectionArgs = new String[]{
                         String.valueOf(ContentUris.parseId(uri))
                 };
