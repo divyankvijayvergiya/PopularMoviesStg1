@@ -439,7 +439,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
                 String[] projection={
                         MovieContract.FavoriteEntry.COLUMN_MOVIE_ID
                 };
-                String selection= MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "?=";
+                String selection= MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "=?";
             Uri uri= MovieContract.FavoriteEntry.builtFavoriteUri(item.getId());
             String[] args=new String[]{
                     String.valueOf(ContentUris.parseId(uri))
