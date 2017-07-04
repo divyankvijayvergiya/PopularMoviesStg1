@@ -3,10 +3,14 @@ package application.example.com.popularmoviesstg1;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,9 +29,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import application.example.com.popularmoviesstg1.Adapter.ImageAdapter;
+import application.example.com.popularmoviesstg1.Data.MovieContract;
 import application.example.com.popularmoviesstg1.Model.GridMovieItem;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     private GridView mGridView;
     private ImageAdapter mAdapter;
-    private List<GridMovieItem> movieList;
+    private ArrayList<GridMovieItem> movieList;
+    private static final int LOADER_ID = 2;
+    private static final int Fav_LOADER_ID = 3;
+
 
 
     private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
@@ -99,6 +106,103 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+       private  LoaderManager.LoaderCallbacks<Cursor> favoritesLoader=new LoaderManager.LoaderCallbacks<Cursor>(){
+
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                return new AsyncTaskLoader<Cursor>(getApplicationContext()) {
+                    Cursor fav=null;
+
+                    @Override
+                    protected void onStartLoading() {
+                        forceLoad();
+                    }
+
+                    @Override
+                    public Cursor loadInBackground() {
+                        try{
+                            return getContentResolver().query(
+                                    MovieContract.FavoriteEntry.CONTENT_URI,
+                                    null,
+                                    null,
+                                    null,
+                                    MovieContract.FavoriteEntry._ID
+                            );
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            return null;
+                        }
+
+
+                    }
+
+                    @Override
+                    public void deliverResult(Cursor data) {
+                        fav=data;
+                        super.deliverResult(data);
+                    }
+                };
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+                mAdapter.setData(null);
+
+                if(loader.getId()==Fav_LOADER_ID){
+                    if(data.getCount()<1){
+                        Log.e(TAG,"Well no matches ");
+                    }else {
+                        while (data.moveToFirst()){
+                            int movieId=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID);
+                            int movieTitle=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_TITLE);
+                            int moviePoster=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_POSTER);
+                            int movieOverview=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_OVERVIEW);
+                            int movieRating=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_RATING);
+                            int movieDate=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE);
+
+
+                            long id=data.getLong(movieId);
+                            String title=data.getString(movieTitle);
+                            String poster=data.getString(moviePoster);
+                            String overview=data.getString(movieOverview);
+                            String rating=data.getString(movieRating);
+                            String date=data.getString(movieDate);
+
+                            movieList.add(new GridMovieItem(poster,id,title,overview,rating,date));
+                        }
+                        mAdapter.setData(movieList);
+                        Log.v(TAG, "Favorites List have data");
+
+                    }
+
+                }else {
+                    mAdapter.clearMoviePosterData();
+                }
+
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+                mAdapter.clearMoviePosterData();
+                if(loader!=null){
+                    mAdapter.clearMoviePosterData();
+                }
+                else {
+                    mAdapter.setData(null);
+                }
+
+
+            }
+        };
+
+        private void favoriteLoader(){
+            getSupportLoaderManager().initLoader(Fav_LOADER_ID,null,null);
+        }
+
+
+
 
     private void data() {
 
@@ -125,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 
     private final class MovieTask extends AsyncTask<String, Void, ArrayList<GridMovieItem>> {
@@ -244,6 +349,10 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_Top_Rated) {
             top_rated();
+            return true;
+        }
+        if(id==R.id.action_Top_Rated){
+            favoriteLoader();
             return true;
         }
         return super.onOptionsItemSelected(item);

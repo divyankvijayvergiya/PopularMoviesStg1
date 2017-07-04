@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import application.example.com.popularmoviesstg1.Model.GridMovieItem;
@@ -19,6 +20,7 @@ import application.example.com.popularmoviesstg1.R;
 
 public class ImageAdapter extends ArrayAdapter<GridMovieItem> {
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w185";
+    private ArrayList<GridMovieItem> movieItems=null;
 
 
     public ImageAdapter(Context context, List<GridMovieItem> t) {
@@ -44,6 +46,15 @@ public class ImageAdapter extends ArrayAdapter<GridMovieItem> {
 
 
         return convertView;
+    }
+    public void setData(ArrayList<GridMovieItem> movieData){
+        movieItems=movieData;
+        notifyDataSetChanged();
+
+    }
+    public void clearMoviePosterData() {
+        movieItems.clear();
+        notifyDataSetChanged();
     }
 
 }

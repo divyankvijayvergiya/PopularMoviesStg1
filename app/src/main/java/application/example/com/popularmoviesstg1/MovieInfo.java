@@ -1,6 +1,13 @@
 package application.example.com.popularmoviesstg1;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,10 +15,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import application.example.com.popularmoviesstg1.Adapter.CustomAdapter;
+import application.example.com.popularmoviesstg1.Data.MovieContract;
 import application.example.com.popularmoviesstg1.Model.GridMovieItem;
 import application.example.com.popularmoviesstg1.Model.Reviews;
 import application.example.com.popularmoviesstg1.Model.Trailer;
@@ -35,6 +46,7 @@ import butterknife.ButterKnife;
 public class MovieInfo extends AppCompatActivity implements CustomAdapter.CustomAdapterOnClickHandler
         ,CustomAdapter.ReviewsAdapterOnClickHandler {
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w185";
+    public static final String TAG=MovieInfo.class.getSimpleName();
     @BindView(R.id.tv_title)
     TextView originalTitle;
     @BindView(R.id.tv_overview)
@@ -58,6 +70,10 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     Reviews revie;
     ArrayList<Reviews> reviewsArrayList;
     ArrayList<Object> objectArrayList;
+    Cursor mData;
+
+    private boolean isFavorite=false;
+    private boolean idIdInDatabase=false;
 
 
 
@@ -88,6 +104,15 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
         FetchReviewsTask task2=new FetchReviewsTask();
         task2.execute();
+
+        FetchQueryOfDatabase task3=new FetchQueryOfDatabase();
+        task3.execute();
+        star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeFavViewColored(v);
+            }
+        });
 
 
 
@@ -292,6 +317,180 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
             return null;
         }
     }
+
+    public void changeFavViewColored(View v){
+        if(isFavorite){
+            borderFav();
+            deleteFav();
+            Toast.makeText(getApplicationContext(),"Movie Un-Favorited",Toast.LENGTH_SHORT).show();
+        }
+        else if(!isFavorite){
+            colorFav();
+            makeFav();
+            Toast.makeText(getApplicationContext(),"Movie Favorited",Toast.LENGTH_SHORT).show();
+
+
+        }
+        }
+        public void colorFav(){
+            isFavorite=true;
+            idIdInDatabase=true;
+            star.setImageResource(R.color.Golden);
+
+
+    }
+    public void borderFav(){
+        isFavorite=true;
+        idIdInDatabase=true;
+        star.setImageResource(R.color.Grey);
+
+
+    }
+    private void makeFav(){
+        if(originalTitle==null||releaseDate==null||
+                voteRating==null||overview==null){
+            Log.e(TAG,"Empty TextViews");
+            finish();
+            return;
+        }
+        GridMovieItem item = getIntent().getParcelableExtra("item");
+        String imageString=item.getPosterPath();
+
+       String favoriteTitle= originalTitle.getText().toString();
+        String favoriteMovieId=item.getId().toString();
+        String favoriteDate=releaseDate.getText().toString();
+        String favoriteRating=voteRating.getText().toString();
+        String favoriteOverview=overview.getText().toString();
+
+
+        long id=0;
+        if (favoriteMovieId!=null){
+            id=Long.parseLong(favoriteMovieId);
+        }
+        float rating=0;
+        if(favoriteRating!=null){
+            rating=Float.parseFloat(favoriteRating);
+        }
+
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID,id);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_TITLE,favoriteTitle);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE,favoriteDate);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_RATING,favoriteRating);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_OVERVIEW,favoriteOverview);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_POSTER,imageString);
+        try {
+            Uri newUri = getContentResolver().insert(MovieContract.FavoriteEntry.CONTENT_URI,
+                    contentValues);
+            Log.v(TAG, "Uri: " + newUri.toString());
+        }catch (Exception e){
+            Log.e(TAG,"Error performing insert task",e);
+        }
+    }
+    private void deleteFav(){
+        ContentResolver resolver=getContentResolver();
+        String selection= MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "=?";
+        GridMovieItem item = getIntent().getParcelableExtra("item");
+        String favoriteId=item.getId().toString();
+        long id=Long.parseLong(favoriteId);
+        Log.v(TAG,"Movie id to b deleted");
+        Uri uri= MovieContract.FavoriteEntry.builtFavoriteUri(id);
+
+        String[] args=new String[]{
+                String.valueOf(ContentUris.parseId(uri))
+
+        };
+        try{
+            int rowsDeleted=resolver.delete(MovieContract.FavoriteEntry.CONTENT_URI,
+                    selection,
+                    args);
+            if(rowsDeleted==-1){
+                Log.e(TAG,"Error deleting a row from database");
+
+            }
+            else{
+                Log.v(TAG,"Row Deleted");
+            }
+        }catch (Exception e){
+            Log.e(TAG,"Error performing delete task",e);
+
+        }
+
+    }
+    private NetworkInfo isNetworkAvailable(Context context) {
+        ConnectivityManager conn =
+                (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
+
+        return conn.getActiveNetworkInfo();
+    }
+
+
+
+    private class FetchQueryOfDatabase extends AsyncTask<Void ,Void ,Cursor>{
+        GridMovieItem item = getIntent().getParcelableExtra("item");
+
+
+
+
+        @Override
+        protected Cursor doInBackground(Void... params) {
+            ContentResolver resolver=getContentResolver();
+
+                String[] projection={
+                        MovieContract.FavoriteEntry.COLUMN_MOVIE_ID
+                };
+                String selection= MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "?=";
+            Uri uri= MovieContract.FavoriteEntry.builtFavoriteUri(item.getId());
+            String[] args=new String[]{
+                    String.valueOf(ContentUris.parseId(uri))
+
+            };
+            Cursor cursor=null;
+        try {
+            cursor = resolver.query(
+                    MovieContract.FavoriteEntry.CONTENT_URI,
+                    projection,
+                    selection,
+                    args,
+                    null
+            );
+        }catch (Exception e){
+            Log.e("Can't query database",e.toString());
+
+        }
+
+
+
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            super.onPostExecute(cursor);
+            mData=cursor;
+            if(null==mData){
+                Log.e(TAG,"Cursor is not working");
+
+            }
+            else if(cursor.getCount()<1){
+                borderFav();
+                Log.v(TAG, "Movie ID not inside DATABASE");
+            }
+            else if(mData.moveToFirst()){
+                for(int j=0;j<mData.getCount();j++){
+                    if (mData.getCount() > 0) {
+                        colorFav();
+                    } else {
+                        borderFav();
+                    }
+                    Log.v(TAG, "This movie is in your DATABASE.");
+                }
+                mData.close();
+                }
+            }
+        }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

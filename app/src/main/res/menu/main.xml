@@ -10,5 +10,8 @@
     <item
         android:id="@+id/action_Popular_Movies"
         android:title="@string/Popular_Movies"></item>
+    <item
+        android:id="@+id/action_favorite_movies"
+        android:title="Favorite"></item>
 </group>
 </menu>
