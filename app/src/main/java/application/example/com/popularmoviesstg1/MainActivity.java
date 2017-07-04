@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     if(data.getCount()<1){
                         Log.e(TAG,"Well no matches ");
                     }else {
-                        while (data.moveToFirst()){
+                        while (data.moveToNext()){
                             int movieId=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID);
                             int movieTitle=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_TITLE);
                             int moviePoster=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_POSTER);
