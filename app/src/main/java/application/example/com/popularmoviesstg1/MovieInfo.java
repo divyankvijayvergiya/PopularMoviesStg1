@@ -333,14 +333,14 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
         }
         public void colorFav(){
-            isFavorite=true;
+            isFavorite=false;
             idIdInDatabase=true;
             star.setImageResource(R.color.Golden);
 
 
     }
     public void borderFav(){
-        isFavorite=true;
+        isFavorite=false;
         idIdInDatabase=true;
         star.setImageResource(R.color.Grey);
 
@@ -366,10 +366,6 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         long id=0;
         if (favoriteMovieId!=null){
             id=Long.parseLong(favoriteMovieId);
-        }
-        float rating=0;
-        if(favoriteRating!=null){
-            rating=Float.parseFloat(favoriteRating);
         }
 
         ContentValues contentValues=new ContentValues();
