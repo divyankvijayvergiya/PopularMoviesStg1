@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
             top_rated();
             return true;
         }
-        if(id==R.id.action_Top_Rated){
+        if(id==R.id.action_favorite_movies){
             favoriteLoader();
             return true;
         }
