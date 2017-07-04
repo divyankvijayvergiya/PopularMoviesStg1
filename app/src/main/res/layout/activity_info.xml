@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_title"
         android:layout_below="@+id/imageButton_star"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:textColor="@color/Blue"
         android:textSize="40sp"
         android:textStyle="bold"/>

@@ -30,13 +30,13 @@ public class MovieContract {
 
 
         public static final String TABLE_NAME="favorites";
-        public static final String COLUMN_MOVIE_ID= " movie_id ";
+        public static final String COLUMN_MOVIE_ID= "movie_id";
 
-        public static final String COLUMN_TITLE= " movie_title ";
-        public static final String COLUMN_RELEASE_DATE= " movie_release_date ";
-        public static final String COLUMN_POSTER= " movie_poster ";
-        public static final String COLUMN_RATING= " movie_rating ";
-        public static final String COLUMN_OVERVIEW= " movie_overview ";
+        public static final String COLUMN_TITLE= "movie_title";
+        public static final String COLUMN_RELEASE_DATE= "movie_release_date";
+        public static final String COLUMN_POSTER= "movie_poster";
+        public static final String COLUMN_RATING= "movie_rating";
+        public static final String COLUMN_OVERVIEW= "movie_overview";
 
         public static Uri builtFavoriteUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI,id);
