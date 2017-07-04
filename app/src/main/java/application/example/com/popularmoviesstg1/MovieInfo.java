@@ -333,7 +333,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
         }
         public void colorFav(){
-            isFavorite=false;
+            isFavorite=true;
             idIdInDatabase=true;
             star.setImageResource(R.color.Golden);
 
