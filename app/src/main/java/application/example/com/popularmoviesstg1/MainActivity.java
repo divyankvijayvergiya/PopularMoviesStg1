@@ -150,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
 
                 mAdapter.setData(null);
 
+
+
+
                 if(loader.getId()==Fav_LOADER_ID){
                     if(data.getCount()<1){
                         Log.e(TAG,"Well no matches ");
@@ -169,9 +172,10 @@ public class MainActivity extends AppCompatActivity {
                             String overview=data.getString(movieOverview);
                             String rating=data.getString(movieRating);
                             String date=data.getString(movieDate);
-
+                            mAdapter.clear();
                             movieList.add(new GridMovieItem(poster,id,title,overview,rating,date));
                         }
+
                         mAdapter.setData(movieList);
                         Log.v(TAG, "Favorites List have data");
 
