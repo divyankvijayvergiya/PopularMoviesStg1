@@ -57,16 +57,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null ) {
-            mGridView.setAdapter(mAdapter);
 
-        } else {
-            movieList = savedInstanceState.getParcelableArrayList("movies");
-        }
 
 
         setContentView(R.layout.activity_main);
 
+        mGridView= (GridView) findViewById(R.id.gvMain);
+        if (savedInstanceState == null ) {
+            mGridView.setAdapter(mAdapter);
+
+
+
+        } else {
+            movieList = savedInstanceState.getParcelableArrayList("movies");
+        }
 
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
