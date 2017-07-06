@@ -62,8 +62,6 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     ImageView posterPath;
     @BindView(R.id.imageButton_star)
     ImageButton star;
-
-
     private CustomAdapter customAdapter;
     @BindView(R.id.recyclerview_trailer)
     RecyclerView mRecyclerView;
@@ -360,7 +358,6 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         star.setColorFilter(getColor(R.color.Grey));
 
 
-
     }
 
     private void makeFav() {
@@ -377,7 +374,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         String favoriteMovieId = item.getId().toString();
         String favoriteDate = item.getReleaseDate().toString();
         String favoriteRating = item.getVoteAverage().toString();
-        String favoriteOverview =item.getOverview().toString();
+        String favoriteOverview = item.getOverview().toString();
 
 
         long id = 0;
@@ -440,7 +437,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
 
     private class FetchQueryOfDatabase extends AsyncTask<Void, Void, Cursor> {
-        ProgressDialog dialog = new ProgressDialog(MovieInfo.this);
+
         GridMovieItem item = getIntent().getParcelableExtra("item");
 
 

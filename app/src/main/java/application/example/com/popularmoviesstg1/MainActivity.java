@@ -51,19 +51,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String API_KEY = BuildConfig.API_KEY;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-
         setContentView(R.layout.activity_main);
 
-        mGridView= (GridView) findViewById(R.id.gvMain);
-        if (savedInstanceState == null ) {
+        mGridView = (GridView) findViewById(R.id.gvMain);
+        if (savedInstanceState == null) {
             ConnectivityManager cm =
                     (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -84,12 +80,9 @@ public class MainActivity extends AppCompatActivity {
             mGridView.setAdapter(mAdapter);
 
 
-
-
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
-            mAdapter=new ImageAdapter(this,movieList);
-
+            mAdapter = new ImageAdapter(this, movieList);
             mGridView.setAdapter(mAdapter);
             mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -112,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
     }
 
     @Override
@@ -122,9 +113,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putParcelableArrayList("movies", movieList);
 
 
-
     }
-
 
 
     private void popular() {
