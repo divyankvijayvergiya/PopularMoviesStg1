@@ -59,8 +59,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     ImageView posterPath;
     @BindView(R.id.imageButton_star)
     ImageButton star;
-    @BindView(R.id.text_favourite)
-    TextView tv_favorite;
+
 
     private CustomAdapter customAdapter;
     @BindView(R.id.recyclerview_trailer)
@@ -104,7 +103,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
         FetchReviewsTask task2=new FetchReviewsTask();
         task2.execute();
-
+        isNetworkAvailable(getApplicationContext());
         FetchQueryOfDatabase task3=new FetchQueryOfDatabase();
         task3.execute();
         star.setOnClickListener(new View.OnClickListener() {
@@ -126,10 +125,10 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         if (item != null) {
             Picasso.with(this).load(BASE_URL.concat(item.getPosterPath())).fit().into(posterPath);
 
-            originalTitle.setText(getString(R.string.Original_title).concat(item.getOriginalTitle()));
+            originalTitle.setText(item.getOriginalTitle());
             overview.setText(getString(R.string.overview).concat(item.getOverview()));
             voteRating.setText(getString(R.string.ratings).concat(item.getVoteAverage()));
-            releaseDate.setText(getString(R.string.release_date).concat(item.getReleaseDate()));
+            releaseDate.setText(item.getReleaseDate());
 
 
         }

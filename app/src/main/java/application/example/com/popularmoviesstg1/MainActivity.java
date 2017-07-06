@@ -40,8 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private GridView mGridView;
     private ImageAdapter mAdapter;
     private ArrayList<GridMovieItem> movieList;
-    private static final int LOADER_ID = 2;
+
     private static final int Fav_LOADER_ID = 3;
+    private static final String LIFECYCLE_CALLBACKS="callbacks";
+    private static final String ON_SAVE_INSTANCE_STATE = "onSaveInstanceState";
+
+
+
 
 
 
@@ -53,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState==null||!savedInstanceState.containsKey("movies")){
+            movieList=new ArrayList<GridMovieItem>();
+        }else{
+            movieList=savedInstanceState.getParcelableArrayList("movies");
+        }
 
 
         setContentView(R.layout.activity_main);
@@ -77,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("movies",movieList);
+
+        super.onSaveInstanceState(outState);
+
+    }
+
+
     private void popular() {
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -87,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             MovieTask task = new MovieTask();
             task.execute(POPULAR_URL.concat(API_KEY));
         } else {
-            Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.internet), Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -101,21 +120,27 @@ public class MainActivity extends AppCompatActivity {
             MovieTask task = new MovieTask();
             task.execute(TOP_RATED_URL.concat(API_KEY));
         } else {
-            Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.internet), Toast.LENGTH_SHORT).show();
 
         }
     }
 
        private  LoaderManager.LoaderCallbacks<Cursor> favoritesLoader=new LoaderManager.LoaderCallbacks<Cursor>(){
 
-            @Override
+
+           @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+
                 return new AsyncTaskLoader<Cursor>(getApplicationContext()) {
+
                     Cursor fav=null;
 
                     @Override
                     protected void onStartLoading() {
+
+
+
                         forceLoad();
                     }
 
@@ -137,8 +162,10 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
+
                     @Override
                     public void deliverResult(Cursor data) {
+
                         fav=data;
                         super.deliverResult(data);
                     }
@@ -147,6 +174,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+
 
                 mAdapter.setData(null);
 
@@ -157,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     if(data.getCount()<1){
                         Log.e(TAG,"Well no matches ");
                     }else {
+                        mAdapter.clear();
                         while (data.moveToNext()){
                             int movieId=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID);
                             int movieTitle=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_TITLE);
@@ -172,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                             String overview=data.getString(movieOverview);
                             String rating=data.getString(movieRating);
                             String date=data.getString(movieDate);
-                            mAdapter.clear();
+
                             movieList.add(new GridMovieItem(poster,id,title,overview,rating,date));
                         }
 
@@ -201,8 +231,16 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        private void favoriteLoader(){
-            getSupportLoaderManager().initLoader(Fav_LOADER_ID,null,favoritesLoader).forceLoad();
+        private void favoriteLoader() {
+            ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+
+
+                getSupportLoaderManager().initLoader(Fav_LOADER_ID, null, favoritesLoader).forceLoad();
+            }else{
+                Toast.makeText(this,getString(R.string.internet),Toast.LENGTH_SHORT).show();
+            }
         }
 
 
