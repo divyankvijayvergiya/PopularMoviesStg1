@@ -1,5 +1,6 @@
 package application.example.com.popularmoviesstg1;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -155,6 +156,14 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     public class FetchTrailerTask extends AsyncTask<String, Void, ArrayList<Trailer>> {
 
         GridMovieItem item = getIntent().getParcelableExtra("item");
+        ProgressDialog dialog = new ProgressDialog(MovieInfo.this);
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Please wait...");
+            dialog.show();
+            super.onPreExecute();
+        }
 
         @Override
         protected ArrayList<Trailer> doInBackground(String... params) {
@@ -187,7 +196,13 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
         protected void onPostExecute(ArrayList<Trailer> trailerOn) {
+            dialog.dismiss();
 
 
             if (trailerOn != null) {
@@ -233,7 +248,16 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
 
     public class FetchReviewsTask extends AsyncTask<String, Void, ArrayList<Reviews>> {
+        ProgressDialog dialog = new ProgressDialog(MovieInfo.this);
+
         GridMovieItem item = getIntent().getParcelableExtra("item");
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Please wait...");
+            dialog.show();
+            super.onPreExecute();
+        }
 
         @Override
         protected ArrayList<Reviews> doInBackground(String... params) {
@@ -264,7 +288,13 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
         protected void onPostExecute(ArrayList<Reviews> reviewses) {
+            dialog.dismiss();
             if (reviewses != null) {
                 customAdapter.reviewsData(reviewses);
                 reviewsArrayList = reviewses;
@@ -403,6 +433,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
 
     private class FetchQueryOfDatabase extends AsyncTask<Void, Void, Cursor> {
+        ProgressDialog dialog = new ProgressDialog(MovieInfo.this);
         GridMovieItem item = getIntent().getParcelableExtra("item");
 
 
