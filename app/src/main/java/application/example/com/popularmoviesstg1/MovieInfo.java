@@ -107,6 +107,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         FetchQueryOfDatabase task3 = new FetchQueryOfDatabase();
         task3.execute();
         star.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 changeFavViewColored(v);
@@ -328,6 +329,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void changeFavViewColored(View v) {
         if (isFavorite) {
             borderFav();
@@ -373,9 +375,9 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
         String favoriteTitle = originalTitle.getText().toString();
         String favoriteMovieId = item.getId().toString();
-        String favoriteDate = releaseDate.getText().toString();
-        String favoriteRating = voteRating.getText().toString();
-        String favoriteOverview = overview.getText().toString();
+        String favoriteDate = item.getReleaseDate().toString();
+        String favoriteRating = item.getVoteAverage().toString();
+        String favoriteOverview =item.getOverview().toString();
 
 
         long id = 0;
@@ -473,6 +475,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
             return cursor;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);

@@ -91,6 +91,22 @@ public class MainActivity extends AppCompatActivity {
             mAdapter=new ImageAdapter(this,movieList);
 
             mGridView.setAdapter(mAdapter);
+            mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //// Creating an instance of GridMovieItem class with movie data
+                    GridMovieItem item = (GridMovieItem) parent.getItemAtPosition(position);
+
+                    Intent intent = new Intent(MainActivity.this, MovieInfo.class);
+                    //passing data to MovieInfo.class
+                    intent.putExtra("item", item);
+                    //start MovieInfo.class
+                    startActivity(intent);
+
+
+                }
+            });
+
             mAdapter.notifyDataSetChanged();
 
         }
