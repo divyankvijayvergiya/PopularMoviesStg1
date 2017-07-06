@@ -64,31 +64,35 @@ public class MainActivity extends AppCompatActivity {
 
         mGridView= (GridView) findViewById(R.id.gvMain);
         if (savedInstanceState == null ) {
-            movieList = new ArrayList<>();
-            mAdapter = new ImageAdapter(MainActivity.this, movieList);
+            ConnectivityManager cm =
+                    (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting()) {
+
+                MovieTask task = new MovieTask();
+                task.execute(POPULAR_URL.concat(API_KEY));
+
+
+            } else {
+                Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
+
+            }
+
             mGridView.setAdapter(mAdapter);
+
 
 
 
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
-        }
 
-        ConnectivityManager cm =
-                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting()) {
-
-            MovieTask task = new MovieTask();
-            task.execute(POPULAR_URL.concat(API_KEY));
-
-
-        } else {
-            Toast.makeText(MainActivity.this, "Please connect to the internet", Toast.LENGTH_SHORT).show();
+            mGridView.setAdapter(mAdapter);
 
         }
+
+
 
 
     }
