@@ -19,7 +19,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +58,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     @BindView(R.id.iv_poster)
     ImageView posterPath;
     @BindView(R.id.imageButton_star)
-    ImageButton star;
+    ImageView star;
 
 
     private CustomAdapter customAdapter;
@@ -343,7 +342,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     public void colorFav() {
         isFavorite = true;
         idIdInDatabase = true;
-        star.setImageResource(R.color.Golden);
+        star.setImageResource(R.drawable.golden);
 
 
     }
@@ -351,7 +350,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     public void borderFav() {
         isFavorite = false;
         idIdInDatabase = true;
-        star.setImageResource(R.color.Grey);
+        star.setImageResource(R.drawable.grey);
 
 
     }
