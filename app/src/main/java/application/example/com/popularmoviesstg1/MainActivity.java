@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+
             mGridView.setAdapter(mAdapter);
 
 
@@ -87,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
+            mAdapter=new ImageAdapter(this,movieList);
 
             mGridView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
 
         }
 
@@ -99,11 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", movieList);
 
-        super.onSaveInstanceState(outState);
+
 
     }
+
 
 
     private void popular() {
