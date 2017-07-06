@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
             TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
     public static final String API_KEY = BuildConfig.API_KEY;
-    GridMovieItem[] movieItems;
+    GridMovieItem[] movieItems=new GridMovieItem[]{movieList.
+
+    }
 
 
     @Override

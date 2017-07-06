@@ -11,14 +11,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +61,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     @BindView(R.id.iv_poster)
     ImageView posterPath;
     @BindView(R.id.imageButton_star)
-    ImageView star;
+    ImageButton star;
 
 
     private CustomAdapter customAdapter;
@@ -339,18 +342,21 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void colorFav() {
         isFavorite = true;
         idIdInDatabase = true;
-        star.setImageResource(R.drawable.golden);
+        star.setColorFilter(getColor(R.color.Golden));
 
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void borderFav() {
         isFavorite = false;
         idIdInDatabase = true;
-        star.setImageResource(R.drawable.grey);
+        star.setColorFilter(getColor(R.color.Grey));
+
 
 
     }
