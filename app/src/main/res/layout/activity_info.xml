@@ -7,7 +7,7 @@
     android:background="@color/Black">
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
 
@@ -28,17 +28,18 @@
             android:id="@+id/iv_poster"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="13dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_title"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_marginLeft="0dp" />
 
 
         <TextView
             android:id="@+id/tv_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="27dp"
+            android:layout_marginLeft="26dp"
             android:layout_marginStart="26dp"
             android:layout_marginTop="24dp"
             android:textColor="@color/white"
@@ -54,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="34dp"
             android:layout_marginEnd="14dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="14dp"
             android:textColor="@color/white"
             android:textSize="25sp"
             app:layout_constraintBottom_toTopOf="@+id/tv_overview"
@@ -67,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="39dp"
-            android:layout_marginRight="2dp"
+            android:layout_marginRight="39dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_release_date"
             app:layout_constraintRight_toRightOf="parent"
@@ -97,16 +98,18 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_overview"></android.support.v7.widget.RecyclerView>
 
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_reviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recyclerview_trailer"></android.support.v7.widget.RecyclerView>
 
 
     </android.support.constraint.ConstraintLayout>
+
 </ScrollView>

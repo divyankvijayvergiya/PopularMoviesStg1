@@ -55,14 +55,16 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView tv_trailer;
+        public final TextView tv_trailer,reviews;
         public final ImageView icon;
+
 
 
         public TrailerViewHolder(View itemView) {
             super(itemView);
             tv_trailer = (TextView) itemView.findViewById(R.id.trailer_name_view);
             icon = (ImageView) itemView.findViewById(R.id.iv);
+            reviews= (TextView) itemView.findViewById(R.id.reviews);
 
 
             itemView.setOnClickListener(this);
@@ -147,12 +149,12 @@ public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Trailer trailorList = trailer.get(position);
 
                 ((TrailerViewHolder) holder).tv_trailer.setText(trailorList.getType());
-                Picasso.with(context).load(YOUTUBE_IMG_URL.concat(trailorList.getKey()).concat(finalUrl)).fit().into(((TrailerViewHolder) holder).icon);
+                Picasso.with(context).load(YOUTUBE_IMG_URL.concat(trailorList.getKey()).concat(finalUrl)).placeholder(R.drawable.placeholder).fit().into(((TrailerViewHolder) holder).icon);
 
                 break;
             case REVIEWS_ID:
                 Reviews reviewList = rev.get(position - trailer.size());
-                ((ReviewsViewHolder) holder).tv_author.setText("Click for Review: ".concat(reviewList.getAuthor()));
+                ((ReviewsViewHolder) holder).tv_author.setText("".concat(reviewList.getAuthor()));
 
                 break;
             default:
