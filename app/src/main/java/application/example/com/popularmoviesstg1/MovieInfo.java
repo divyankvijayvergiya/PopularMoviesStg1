@@ -370,11 +370,11 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         GridMovieItem item = getIntent().getParcelableExtra("item");
         String imageString = item.getPosterPath();
 
-        String favoriteTitle = originalTitle.getText().toString();
+        String favoriteTitle = item.getOriginalTitle();
         String favoriteMovieId = item.getId().toString();
-        String favoriteDate = item.getReleaseDate().toString();
-        String favoriteRating = item.getVoteAverage().toString();
-        String favoriteOverview = item.getOverview().toString();
+        String favoriteDate = item.getReleaseDate();
+        String favoriteRating = item.getVoteAverage();
+        String favoriteOverview = item.getOverview();
 
 
         long id = 0;
@@ -430,7 +430,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
     private NetworkInfo isNetworkAvailable(Context context) {
         ConnectivityManager conn =
-                (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return conn.getActiveNetworkInfo();
     }
