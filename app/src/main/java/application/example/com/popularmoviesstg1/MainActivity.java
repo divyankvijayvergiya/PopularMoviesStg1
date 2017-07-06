@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import application.example.com.popularmoviesstg1.Adapter.ImageAdapter;
 import application.example.com.popularmoviesstg1.Data.MovieContract;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int Fav_LOADER_ID = 3;
     private static final String LIFECYCLE_CALLBACKS = "callbacks";
     private static final String ON_SAVE_INSTANCE_STATE = "onSaveInstanceState";
+    GridMovieItem[] movieItems;
 
 
     private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            movieList = new ArrayList<GridMovieItem>();
+            movieList = new ArrayList<GridMovieItem>(Arrays.asList(movieItems));
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
         }
