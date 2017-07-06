@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import application.example.com.popularmoviesstg1.Adapter.ImageAdapter;
 import application.example.com.popularmoviesstg1.Data.MovieContract;
@@ -49,13 +50,14 @@ public class MainActivity extends AppCompatActivity {
     private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
             TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
     public static final String API_KEY = BuildConfig.API_KEY;
+    GridMovieItem[] movieItems;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
-            movieList = new ArrayList<GridMovieItem>();
+            movieList = new ArrayList<GridMovieItem>(Arrays.asList(movieItems));
         } else {
             movieList = savedInstanceState.getParcelableArrayList("movies");
         }
