@@ -3,12 +3,9 @@ package application.example.com.popularmoviesstg1.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Dell on 26-06-2017.
- */
+
 
 public class Trailer implements Parcelable {
-
 
 
     private String mId;
@@ -18,14 +15,15 @@ public class Trailer implements Parcelable {
     private String size;
     private String type;
 
-    public Trailer(String mId,String name, String key,String site, String size , String type){
-        this.mId=mId;
-        this.name=name;
-        this.key=key;
-        this.site=site;
-        this.size=size;
-        this.type=type;
+    public Trailer(String mId, String name, String key, String site, String size, String type) {
+        this.mId = mId;
+        this.name = name;
+        this.key = key;
+        this.site = site;
+        this.size = size;
+        this.type = type;
     }
+
     public String getmId() {
         return mId;
     }
@@ -49,7 +47,6 @@ public class Trailer implements Parcelable {
     public String getType() {
         return type;
     }
-
 
 
     protected Trailer(Parcel in) {

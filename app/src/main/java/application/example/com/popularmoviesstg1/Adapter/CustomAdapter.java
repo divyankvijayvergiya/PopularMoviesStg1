@@ -17,18 +17,14 @@ import application.example.com.popularmoviesstg1.R;
 import application.example.com.popularmoviesstg1.Model.Reviews;
 import application.example.com.popularmoviesstg1.Model.Trailer;
 
-/**
- * Created by Dell on 26-06-2017.
- */
+
 
 public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String YOUTUBE_IMG_URL = "https://img.youtube.com/vi/";
-    String finalUrl =  "/0.jpg";
-    private static final String TAG = CustomAdapter.class.getSimpleName();
+    String finalUrl = "/0.jpg";
     public final int REVIEWS_ID = 1;
     public final int TRAILOR_ID = 0;
     Context context;
-
     private ArrayList<Object> objects;
     private ArrayList<Trailer> trailer;
     private ArrayList<Reviews> rev;

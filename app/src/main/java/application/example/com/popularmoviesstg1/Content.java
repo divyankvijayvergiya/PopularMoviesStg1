@@ -10,13 +10,12 @@ import application.example.com.popularmoviesstg1.Model.Reviews;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Dell on 29-06-2017.
- */
+
 
 public class Content extends AppCompatActivity {
     @BindView(R.id.tv_reviews)
     TextView content;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +25,8 @@ public class Content extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-
-        Reviews item=getIntent().getParcelableExtra("reviews");
-        if(item!=null){
+        Reviews item = getIntent().getParcelableExtra("reviews");
+        if (item != null) {
             content.setText(item.getContent());
         }
 

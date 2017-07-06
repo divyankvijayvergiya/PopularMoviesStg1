@@ -44,9 +44,9 @@ import butterknife.ButterKnife;
 
 
 public class MovieInfo extends AppCompatActivity implements CustomAdapter.CustomAdapterOnClickHandler
-        ,CustomAdapter.ReviewsAdapterOnClickHandler {
+        , CustomAdapter.ReviewsAdapterOnClickHandler {
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w185";
-    public static final String TAG=MovieInfo.class.getSimpleName();
+    public static final String TAG = MovieInfo.class.getSimpleName();
     @BindView(R.id.tv_title)
     TextView originalTitle;
     @BindView(R.id.tv_overview)
@@ -63,7 +63,7 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
     private CustomAdapter customAdapter;
     @BindView(R.id.recyclerview_trailer)
-     RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     Trailer trailers;
     ArrayList<Trailer> trailerArrayList;
     Reviews revie;
@@ -71,11 +71,8 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     ArrayList<Object> objectArrayList;
     Cursor mData;
 
-    private boolean isFavorite=false;
-    private boolean idIdInDatabase=false;
-
-
-
+    private boolean isFavorite = false;
+    private boolean idIdInDatabase = false;
 
 
     @Override
@@ -87,24 +84,24 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         ButterKnife.bind(this);
 
 
-        LinearLayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
 
         mRecyclerView.setHasFixedSize(true);
-        trailerArrayList =new ArrayList<>();
-        reviewsArrayList=new ArrayList<>();
-        objectArrayList=new ArrayList<>();
-        customAdapter=new CustomAdapter(this,trailerArrayList,reviewsArrayList,this,objectArrayList);
+        trailerArrayList = new ArrayList<>();
+        reviewsArrayList = new ArrayList<>();
+        objectArrayList = new ArrayList<>();
+        customAdapter = new CustomAdapter(this, trailerArrayList, reviewsArrayList, this, objectArrayList);
 
 
         mRecyclerView.setAdapter(customAdapter);
-        FetchTrailerTask task=new FetchTrailerTask();
+        FetchTrailerTask task = new FetchTrailerTask();
         task.execute();
 
-        FetchReviewsTask task2=new FetchReviewsTask();
+        FetchReviewsTask task2 = new FetchReviewsTask();
         task2.execute();
         isNetworkAvailable(getApplicationContext());
-        FetchQueryOfDatabase task3=new FetchQueryOfDatabase();
+        FetchQueryOfDatabase task3 = new FetchQueryOfDatabase();
         task3.execute();
         star.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,10 +109,6 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
                 changeFavViewColored(v);
             }
         });
-
-
-
-
 
 
 //// Fetching data from a parcelable object passed from MainActivity
@@ -137,12 +130,12 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
     @Override
     public void onListItemClick(int clickItemIndex) {
-       trailers=trailerArrayList.get(clickItemIndex);
+        trailers = trailerArrayList.get(clickItemIndex);
 
-        String urlAsString="https://www.youtube.com/watch?v=";
-        Uri webPage=Uri.parse(urlAsString.concat(trailers.getKey()));
-        Intent intent=new Intent(Intent.ACTION_VIEW,webPage);
-        if(intent.resolveActivity(getPackageManager())!=null){
+        String urlAsString = "https://www.youtube.com/watch?v=";
+        Uri webPage = Uri.parse(urlAsString.concat(trailers.getKey()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, webPage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
 
@@ -150,48 +143,45 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
 
     @Override
     public void onClick(int click) {
-        revie=reviewsArrayList.get(click);
-        Intent i=new Intent(this,Content.class);
-            i.putExtra("reviews",revie);
+        revie = reviewsArrayList.get(click);
+        Intent i = new Intent(this, Content.class);
+        i.putExtra("reviews", revie);
         startActivity(i);
-
 
 
     }
 
 
-    public class FetchTrailerTask extends AsyncTask<String,Void,ArrayList<Trailer>>{
+    public class FetchTrailerTask extends AsyncTask<String, Void, ArrayList<Trailer>> {
 
         GridMovieItem item = getIntent().getParcelableExtra("item");
+
         @Override
         protected ArrayList<Trailer> doInBackground(String... params) {
 
-            Uri.Builder builder=new Uri.Builder();
+            Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
                     .authority("api.themoviedb.org")
                     .appendPath("3")
-                     .appendPath("movie")
+                    .appendPath("movie")
                     .appendPath(item.getId().toString())
                     .appendPath("videos")
-                    .appendQueryParameter("api_key",BuildConfig.API_KEY).build();
-            URL url =null;
+                    .appendQueryParameter("api_key", BuildConfig.API_KEY).build();
+            URL url = null;
             try {
-                url=new URL(builder.toString());
+                url = new URL(builder.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
 
             try {
-                String Response=NetworkUtils.makeHttpRequest(url);
-                ArrayList<Trailer> json=ExtractFromJson(Response);
+                String Response = NetworkUtils.makeHttpRequest(url);
+                ArrayList<Trailer> json = ExtractFromJson(Response);
                 return json;
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
             }
-
-
-
 
 
         }
@@ -200,43 +190,33 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         protected void onPostExecute(ArrayList<Trailer> trailerOn) {
 
 
-
-
-
-            if(trailerOn!=null){
+            if (trailerOn != null) {
                 customAdapter.trailerData(trailerOn);
-                trailerArrayList=trailerOn;
-
-
+                trailerArrayList = trailerOn;
 
 
             }
             super.onPostExecute(trailerOn);
         }
 
-        public ArrayList<Trailer> ExtractFromJson(String trailorList){
+        public ArrayList<Trailer> ExtractFromJson(String trailorList) {
 
-            ArrayList<Trailer> trailersJson=new ArrayList<>();
+            ArrayList<Trailer> trailersJson = new ArrayList<>();
             try {
-                JSONObject root=new JSONObject(trailorList);
+                JSONObject root = new JSONObject(trailorList);
 
-                JSONArray resultArray=root.getJSONArray("results");
-                for(int i=0;i<resultArray.length();i++){
-                    JSONObject jsonObject=resultArray.getJSONObject(i);
-                    String mId=jsonObject.getString("id");
-                    String name=jsonObject.getString("name");
-                    String key=jsonObject.getString("key");
-                    String site=jsonObject.getString("site");
-                    String size=jsonObject.getString("size");
-                    String type=jsonObject.getString("type");
+                JSONArray resultArray = root.getJSONArray("results");
+                for (int i = 0; i < resultArray.length(); i++) {
+                    JSONObject jsonObject = resultArray.getJSONObject(i);
+                    String mId = jsonObject.getString("id");
+                    String name = jsonObject.getString("name");
+                    String key = jsonObject.getString("key");
+                    String site = jsonObject.getString("site");
+                    String size = jsonObject.getString("size");
+                    String type = jsonObject.getString("type");
 
-                    Trailer trailer=new Trailer(mId,name,key,site,size,type);
+                    Trailer trailer = new Trailer(mId, name, key, site, size, type);
                     trailersJson.add(trailer);
-
-
-
-
-
 
 
                 }
@@ -252,28 +232,28 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     }
 
 
-    public class FetchReviewsTask extends AsyncTask<String,Void,ArrayList<Reviews>>{
+    public class FetchReviewsTask extends AsyncTask<String, Void, ArrayList<Reviews>> {
         GridMovieItem item = getIntent().getParcelableExtra("item");
 
         @Override
         protected ArrayList<Reviews> doInBackground(String... params) {
-            Uri.Builder builder=new Uri.Builder();
+            Uri.Builder builder = new Uri.Builder();
             builder.scheme("https")
                     .authority("api.themoviedb.org")
                     .appendPath("3")
                     .appendPath("movie")
                     .appendPath(item.getId().toString())
                     .appendPath("reviews")
-                    .appendQueryParameter("api_key",BuildConfig.API_KEY).build();
-            URL url =null;
+                    .appendQueryParameter("api_key", BuildConfig.API_KEY).build();
+            URL url = null;
             try {
-                url=new URL(builder.toString());
+                url = new URL(builder.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
             try {
-                String Response=NetworkUtils.makeHttpRequest(url);
-                ArrayList<Reviews> json=FetchReviewsFromJson(Response);
+                String Response = NetworkUtils.makeHttpRequest(url);
+                ArrayList<Reviews> json = FetchReviewsFromJson(Response);
                 return json;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -281,31 +261,30 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
             }
 
 
-
         }
 
         @Override
         protected void onPostExecute(ArrayList<Reviews> reviewses) {
-            if(reviewses!=null){
+            if (reviewses != null) {
                 customAdapter.reviewsData(reviewses);
-                reviewsArrayList=reviewses;
+                reviewsArrayList = reviewses;
 
             }
             super.onPostExecute(reviewses);
         }
 
-        public ArrayList<Reviews> FetchReviewsFromJson(String reviewsList){
-            ArrayList<Reviews> reviewses=new ArrayList<>();
+        public ArrayList<Reviews> FetchReviewsFromJson(String reviewsList) {
+            ArrayList<Reviews> reviewses = new ArrayList<>();
             try {
-                JSONObject root=new JSONObject(reviewsList);
-                JSONArray resultArray=root.getJSONArray("results");
-                for (int i=0;i<resultArray.length();i++){
-                   JSONObject jsonObject=resultArray.getJSONObject(i);
-                    String idReviews=jsonObject.getString("id");
-                    String author=jsonObject.getString("author");
-                    String content=jsonObject.getString("content");
-                    String url=jsonObject.getString("url");
-                    Reviews review=new Reviews(idReviews,author,content,url);
+                JSONObject root = new JSONObject(reviewsList);
+                JSONArray resultArray = root.getJSONArray("results");
+                for (int i = 0; i < resultArray.length(); i++) {
+                    JSONObject jsonObject = resultArray.getJSONObject(i);
+                    String idReviews = jsonObject.getString("id");
+                    String author = jsonObject.getString("author");
+                    String content = jsonObject.getString("content");
+                    String url = jsonObject.getString("url");
+                    Reviews review = new Reviews(idReviews, author, content, url);
                     reviewses.add(review);
 
                 }
@@ -317,101 +296,104 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         }
     }
 
-    public void changeFavViewColored(View v){
-        if(isFavorite){
+    public void changeFavViewColored(View v) {
+        if (isFavorite) {
             borderFav();
             deleteFav();
-            Toast.makeText(getApplicationContext(),"Movie Un-Favorited",Toast.LENGTH_SHORT).show();
-        }
-        else if(!isFavorite){
+            Toast.makeText(getApplicationContext(), "Movie Un-Favorited", Toast.LENGTH_SHORT).show();
+        } else if (!isFavorite) {
             colorFav();
             makeFav();
-            Toast.makeText(getApplicationContext(),"Movie Favorited",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Movie Favorited", Toast.LENGTH_SHORT).show();
 
 
         }
-        }
-        public void colorFav(){
-            isFavorite=true;
-            idIdInDatabase=true;
-            star.setImageResource(R.color.Golden);
+    }
+
+    public void colorFav() {
+        isFavorite = true;
+        idIdInDatabase = true;
+        star.setImageResource(R.color.Golden);
 
 
     }
-    public void borderFav(){
-        isFavorite=false;
-        idIdInDatabase=true;
+
+    public void borderFav() {
+        isFavorite = false;
+        idIdInDatabase = true;
         star.setImageResource(R.color.Grey);
 
 
     }
-    private void makeFav(){
-        if(originalTitle==null||releaseDate==null||
-                voteRating==null||overview==null){
-            Log.e(TAG,"Empty TextViews");
+
+    private void makeFav() {
+        if (originalTitle == null || releaseDate == null ||
+                voteRating == null || overview == null) {
+            Log.e(TAG, "Empty TextViews");
             finish();
             return;
         }
         GridMovieItem item = getIntent().getParcelableExtra("item");
-        String imageString=item.getPosterPath();
+        String imageString = item.getPosterPath();
 
-       String favoriteTitle= originalTitle.getText().toString();
-        String favoriteMovieId=item.getId().toString();
-        String favoriteDate=releaseDate.getText().toString();
-        String favoriteRating=voteRating.getText().toString();
-        String favoriteOverview=overview.getText().toString();
+        String favoriteTitle = originalTitle.getText().toString();
+        String favoriteMovieId = item.getId().toString();
+        String favoriteDate = releaseDate.getText().toString();
+        String favoriteRating = voteRating.getText().toString();
+        String favoriteOverview = overview.getText().toString();
 
 
-        long id=0;
-        if (favoriteMovieId!=null){
-            id=Long.parseLong(favoriteMovieId);
+        long id = 0;
+        if (favoriteMovieId != null) {
+            id = Long.parseLong(favoriteMovieId);
         }
 
-        ContentValues contentValues=new ContentValues();
-        contentValues.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID,id);
-        contentValues.put(MovieContract.FavoriteEntry.COLUMN_TITLE,favoriteTitle);
-        contentValues.put(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE,favoriteDate);
-        contentValues.put(MovieContract.FavoriteEntry.COLUMN_RATING,favoriteRating);
-        contentValues.put(MovieContract.FavoriteEntry.COLUMN_OVERVIEW,favoriteOverview);
-        contentValues.put(MovieContract.FavoriteEntry.COLUMN_POSTER,imageString);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID, id);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_TITLE, favoriteTitle);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE, favoriteDate);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_RATING, favoriteRating);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_OVERVIEW, favoriteOverview);
+        contentValues.put(MovieContract.FavoriteEntry.COLUMN_POSTER, imageString);
         try {
             Uri newUri = getContentResolver().insert(MovieContract.FavoriteEntry.CONTENT_URI,
                     contentValues);
             Log.v(TAG, "Uri: " + newUri.toString());
-        }catch (Exception e){
-            Log.e(TAG,"Error performing insert task",e);
+        } catch (Exception e) {
+            Log.e(TAG, "Error performing insert task", e);
         }
     }
-    private void deleteFav(){
-        ContentResolver resolver=getContentResolver();
-        String selection= MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "=?";
-        GridMovieItem item = getIntent().getParcelableExtra("item");
-        String favoriteId=item.getId().toString();
-        long id=Long.parseLong(favoriteId);
-        Log.v(TAG,"Movie id to b deleted");
-        Uri uri= MovieContract.FavoriteEntry.builtFavoriteUri(id);
 
-        String[] args=new String[]{
+    private void deleteFav() {
+        ContentResolver resolver = getContentResolver();
+        String selection = MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "=?";
+        GridMovieItem item = getIntent().getParcelableExtra("item");
+        String favoriteId = item.getId().toString();
+        long id = Long.parseLong(favoriteId);
+        Log.v(TAG, "Movie id to b deleted");
+        Uri uri = MovieContract.FavoriteEntry.builtFavoriteUri(id);
+
+        String[] args = new String[]{
                 String.valueOf(ContentUris.parseId(uri))
 
         };
-        try{
-            int rowsDeleted=resolver.delete(MovieContract.FavoriteEntry.CONTENT_URI,
+        try {
+            int rowsDeleted = resolver.delete(MovieContract.FavoriteEntry.CONTENT_URI,
                     selection,
                     args);
-            if(rowsDeleted==-1){
-                Log.e(TAG,"Error deleting a row from database");
+            if (rowsDeleted == -1) {
+                Log.e(TAG, "Error deleting a row from database");
 
+            } else {
+                Log.v(TAG, "Row Deleted");
             }
-            else{
-                Log.v(TAG,"Row Deleted");
-            }
-        }catch (Exception e){
-            Log.e(TAG,"Error performing delete task",e);
+        } catch (Exception e) {
+            Log.e(TAG, "Error performing delete task", e);
 
         }
 
     }
+
     private NetworkInfo isNetworkAvailable(Context context) {
         ConnectivityManager conn =
                 (ConnectivityManager) getSystemService(context.CONNECTIVITY_SERVICE);
@@ -420,40 +402,36 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
     }
 
 
-
-    private class FetchQueryOfDatabase extends AsyncTask<Void ,Void ,Cursor>{
+    private class FetchQueryOfDatabase extends AsyncTask<Void, Void, Cursor> {
         GridMovieItem item = getIntent().getParcelableExtra("item");
-
-
 
 
         @Override
         protected Cursor doInBackground(Void... params) {
-            ContentResolver resolver=getContentResolver();
+            ContentResolver resolver = getContentResolver();
 
-                String[] projection={
-                        MovieContract.FavoriteEntry.COLUMN_MOVIE_ID
-                };
-                String selection= MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "=?";
-            Uri uri= MovieContract.FavoriteEntry.builtFavoriteUri(item.getId());
-            String[] args=new String[]{
+            String[] projection = {
+                    MovieContract.FavoriteEntry.COLUMN_MOVIE_ID
+            };
+            String selection = MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + "=?";
+            Uri uri = MovieContract.FavoriteEntry.builtFavoriteUri(item.getId());
+            String[] args = new String[]{
                     String.valueOf(ContentUris.parseId(uri))
 
             };
-            Cursor cursor=null;
-        try {
-            cursor = resolver.query(
-                    MovieContract.FavoriteEntry.CONTENT_URI,
-                    projection,
-                    selection,
-                    args,
-                    null
-            );
-        }catch (Exception e){
-            Log.e("Can't query database",e.toString());
+            Cursor cursor = null;
+            try {
+                cursor = resolver.query(
+                        MovieContract.FavoriteEntry.CONTENT_URI,
+                        projection,
+                        selection,
+                        args,
+                        null
+                );
+            } catch (Exception e) {
+                Log.e("Can't query database", e.toString());
 
-        }
-
+            }
 
 
             return cursor;
@@ -462,17 +440,15 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
         @Override
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
-            mData=cursor;
-            if(null==mData){
-                Log.e(TAG,"Cursor is not working");
+            mData = cursor;
+            if (null == mData) {
+                Log.e(TAG, "Cursor is not working");
 
-            }
-            else if(cursor.getCount()<1){
+            } else if (cursor.getCount() < 1) {
                 borderFav();
                 Log.v(TAG, "Movie ID not inside DATABASE");
-            }
-            else if(mData.moveToFirst()){
-                for(int j=0;j<mData.getCount();j++){
+            } else if (mData.moveToFirst()) {
+                for (int j = 0; j < mData.getCount(); j++) {
                     if (mData.getCount() > 0) {
                         colorFav();
                     } else {
@@ -481,9 +457,9 @@ public class MovieInfo extends AppCompatActivity implements CustomAdapter.Custom
                     Log.v(TAG, "This movie is in your DATABASE.");
                 }
                 mData.close();
-                }
             }
         }
+    }
 
 
     @Override

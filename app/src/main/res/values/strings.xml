@@ -7,6 +7,8 @@
     <string name="ratings">Ratings: \t </string>
     <string name="release_date">Release Date: \t</string>
     <string name="internet">Please connect to the internet</string>
+    <string name="content">Content</string>
+    <string name="favorite">Favorite</string>
 
 
 

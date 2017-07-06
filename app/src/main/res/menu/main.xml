@@ -12,6 +12,6 @@
         android:title="@string/Popular_Movies"></item>
     <item
         android:id="@+id/action_favorite_movies"
-        android:title="Favorite"></item>
+        android:title="@string/favorite"></item>
 </group>
 </menu>

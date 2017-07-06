@@ -42,26 +42,22 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<GridMovieItem> movieList;
 
     private static final int Fav_LOADER_ID = 3;
-    private static final String LIFECYCLE_CALLBACKS="callbacks";
+    private static final String LIFECYCLE_CALLBACKS = "callbacks";
     private static final String ON_SAVE_INSTANCE_STATE = "onSaveInstanceState";
-
-
-
-
 
 
     private final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?api_key=",
             TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
- public static final String API_KEY = BuildConfig.API_KEY;
+    public static final String API_KEY = BuildConfig.API_KEY;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState==null||!savedInstanceState.containsKey("movies")){
-            movieList=new ArrayList<GridMovieItem>();
-        }else{
-            movieList=savedInstanceState.getParcelableArrayList("movies");
+        if (savedInstanceState == null || !savedInstanceState.containsKey("movies")) {
+            movieList = new ArrayList<GridMovieItem>();
+        } else {
+            movieList = savedInstanceState.getParcelableArrayList("movies");
         }
 
 
@@ -89,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("movies",movieList);
+        outState.putParcelableArrayList("movies", movieList);
 
         super.onSaveInstanceState(outState);
 
@@ -125,125 +121,118 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-       private  LoaderManager.LoaderCallbacks<Cursor> favoritesLoader=new LoaderManager.LoaderCallbacks<Cursor>(){
+    private LoaderManager.LoaderCallbacks<Cursor> favoritesLoader = new LoaderManager.LoaderCallbacks<Cursor>() {
 
 
-           @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
 
-                return new AsyncTaskLoader<Cursor>(getApplicationContext()) {
+            return new AsyncTaskLoader<Cursor>(getApplicationContext()) {
 
-                    Cursor fav=null;
+                Cursor fav = null;
 
-                    @Override
-                    protected void onStartLoading() {
-
-
-
-                        forceLoad();
-                    }
-
-                    @Override
-                    public Cursor loadInBackground() {
-                        try{
-                            return getContentResolver().query(
-                                    MovieContract.FavoriteEntry.CONTENT_URI,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                            );
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            return null;
-                        }
+                @Override
+                protected void onStartLoading() {
 
 
-                    }
-
-
-                    @Override
-                    public void deliverResult(Cursor data) {
-
-                        fav=data;
-                        super.deliverResult(data);
-                    }
-                };
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-
-
-                mAdapter.setData(null);
-
-
-
-
-                if(loader.getId()==Fav_LOADER_ID){
-                    if(data.getCount()<1){
-                        Log.e(TAG,"Well no matches ");
-                    }else {
-                        mAdapter.clear();
-                        while (data.moveToNext()){
-                            int movieId=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID);
-                            int movieTitle=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_TITLE);
-                            int moviePoster=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_POSTER);
-                            int movieOverview=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_OVERVIEW);
-                            int movieRating=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_RATING);
-                            int movieDate=data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE);
-
-
-                            long id=data.getLong(movieId);
-                            String title=data.getString(movieTitle);
-                            String poster=data.getString(moviePoster);
-                            String overview=data.getString(movieOverview);
-                            String rating=data.getString(movieRating);
-                            String date=data.getString(movieDate);
-
-                            movieList.add(new GridMovieItem(poster,id,title,overview,rating,date));
-                        }
-
-                        mAdapter.setData(movieList);
-                        Log.v(TAG, "Favorites List have data");
-
-                    }
-
-                }else {
-                    mAdapter.clearMoviePosterData();
+                    forceLoad();
                 }
 
-            }
+                @Override
+                public Cursor loadInBackground() {
+                    try {
+                        return getContentResolver().query(
+                                MovieContract.FavoriteEntry.CONTENT_URI,
+                                null,
+                                null,
+                                null,
+                                null
+                        );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
 
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-                mAdapter.clearMoviePosterData();
-                if(loader!=null){
-                    mAdapter.clearMoviePosterData();
-                }
-                else {
-                    mAdapter.setData(null);
+
                 }
 
 
-            }
-        };
+                @Override
+                public void deliverResult(Cursor data) {
 
-        private void favoriteLoader() {
-            ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-
-
-                getSupportLoaderManager().initLoader(Fav_LOADER_ID, null, favoritesLoader).forceLoad();
-            }else{
-                Toast.makeText(this,getString(R.string.internet),Toast.LENGTH_SHORT).show();
-            }
+                    fav = data;
+                    super.deliverResult(data);
+                }
+            };
         }
 
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
+
+            mAdapter.setData(null);
+
+
+            if (loader.getId() == Fav_LOADER_ID) {
+                if (data.getCount() < 1) {
+                    Log.e(TAG, "Well no matches ");
+                } else {
+                    mAdapter.clear();
+                    while (data.moveToNext()) {
+                        int movieId = data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_ID);
+                        int movieTitle = data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_TITLE);
+                        int moviePoster = data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_POSTER);
+                        int movieOverview = data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_OVERVIEW);
+                        int movieRating = data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_RATING);
+                        int movieDate = data.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE);
+
+
+                        long id = data.getLong(movieId);
+                        String title = data.getString(movieTitle);
+                        String poster = data.getString(moviePoster);
+                        String overview = data.getString(movieOverview);
+                        String rating = data.getString(movieRating);
+                        String date = data.getString(movieDate);
+
+                        movieList.add(new GridMovieItem(poster, id, title, overview, rating, date));
+                    }
+
+                    mAdapter.setData(movieList);
+                    Log.v(TAG, "Favorites List have data");
+
+                }
+
+            } else {
+                mAdapter.clearMoviePosterData();
+            }
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            mAdapter.clearMoviePosterData();
+            if (loader != null) {
+                mAdapter.clearMoviePosterData();
+            } else {
+                mAdapter.setData(null);
+            }
+
+
+        }
+    };
+
+    private void favoriteLoader() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+
+
+            getSupportLoaderManager().initLoader(Fav_LOADER_ID, null, favoritesLoader).forceLoad();
+        } else {
+            Toast.makeText(this, getString(R.string.internet), Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private void data() {
@@ -271,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 
     private final class MovieTask extends AsyncTask<String, Void, ArrayList<GridMovieItem>> {
@@ -346,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < result_array.length(); i++) {
                     JSONObject jsonObject = result_array.getJSONObject(i);
                     String poster_path = jsonObject.getString("poster_path");
-                    Long id=jsonObject.getLong("id");
+                    Long id = jsonObject.getLong("id");
 
 
                     String original_title = jsonObject.getString("original_title");
@@ -357,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
 
                     String release_date = jsonObject.getString("release_date");
 
-                    GridMovieItem moiveItem = new GridMovieItem(poster_path,id, original_title, overview, vote_average, release_date);
+                    GridMovieItem moiveItem = new GridMovieItem(poster_path, id, original_title, overview, vote_average, release_date);
                     movielist.add(moiveItem);
                 }
                 return movielist;
@@ -393,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
             top_rated();
             return true;
         }
-        if(id==R.id.action_favorite_movies){
+        if (id == R.id.action_favorite_movies) {
             favoriteLoader();
             return true;
         }
