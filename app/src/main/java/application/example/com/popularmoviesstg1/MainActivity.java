@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         mGridView= (GridView) findViewById(R.id.gvMain);
         if (savedInstanceState == null ) {
+            movieList = new ArrayList<>();
+            mAdapter = new ImageAdapter(MainActivity.this, movieList);
             mGridView.setAdapter(mAdapter);
 
 
